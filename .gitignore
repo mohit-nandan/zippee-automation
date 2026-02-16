@@ -1,0 +1,62 @@
+# ================================
+# Node
+# ================================
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+
+# ================================
+# Cypress
+# ================================
+cypress/videos/
+cypress/screenshots/
+cypress/downloads/
+cypress/cache/
+cypress/reports/
+
+# Cypress binary cache (local machine)
+.cache/
+Cypress/
+
+# ================================
+# Environment files
+# ================================
+.env
+.env.*
+config/local.json
+
+# ================================
+# Logs
+# ================================
+logs/
+*.log
+
+# ================================
+# OS Files
+# ================================
+.DS_Store
+Thumbs.db
+
+# ================================
+# IDE Files
+# ================================
+.vscode/
+.idea/
+
+# ================================
+# Docker
+# ================================
+docker-compose.override.yml
+
+# ================================
+# Coverage (if added later)
+# ================================
+coverage/
+
+# ================================
+# Temporary files
+# ================================
+*.tmp
+*.swp

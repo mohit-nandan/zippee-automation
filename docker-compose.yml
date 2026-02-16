@@ -1,0 +1,6 @@
+services:
+  cypress:
+    build: .
+    container_name: zippee_cypress
+    volumes:
+      - .:/app

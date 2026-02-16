@@ -1,0 +1,19 @@
+{
+  "name": "zippee-automation",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "cy:staging": "cypress run --env configFile=staging",
+    "cy:preprod": "cypress run --env configFile=preprod",
+    "cy:prod": "cypress run --env configFile=prod",
+    "docker:staging": "docker-compose up --build"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "cypress": "^15.10.0"
+  }
+}
