@@ -18,7 +18,7 @@ cypress/reports/
 
 # Cypress binary cache (local machine)
 .cache/
-Cypress/
+
 
 # ================================
 # Environment files
