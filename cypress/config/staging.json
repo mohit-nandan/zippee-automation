@@ -1,0 +1,7 @@
+{
+    "baseUrl": "https://staging.zfwhospitality.in",
+    "env": {
+        "adminUser": "testums11@gmail.com",
+        "adminPass": "QWERTY!@#$%"
+    }
+}
