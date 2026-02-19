@@ -4,3 +4,4 @@ services:
     container_name: zippee_cypress
     volumes:
       - .:/app
+    command: npx cypress run --env configFile=staging
