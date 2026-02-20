@@ -7,15 +7,9 @@ describe("Analytics", () => {
         AnalyticsPage.clickAnalyticsTab();
     });
 
-    it("Operation Tab", () => {
+    it("Verify Analytics Tab and other functionality", () => {
         AnalyticsPage.clickOperationTab();
-    });
-
-    it("Business Tab", () => {
         AnalyticsPage.clickBusinessTab();
-    });
-
-    it("Brands Tab", () => {
         AnalyticsPage.clickBrandsTab();
     });
 });
