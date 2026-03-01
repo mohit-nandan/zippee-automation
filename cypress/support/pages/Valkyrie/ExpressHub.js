@@ -1,0 +1,38 @@
+const basePage = require("../Common/BasePage");
+const ValkyrieRoutes = require("../../api/Valkyrie");
+
+class ExpressHub extends basePage {
+    constructor() {
+        super();
+    }
+
+    validateExpressHub() {
+        cy.intercept({
+            method: 'GET',
+            url: ValkyrieRoutes.ExpressHubShipments
+        }).as('ExpressHubShipments');
+
+        cy.contains("a", "Valkyrie").realHover();
+        cy.contains("Express Hub").click();
+        cy.url().should("include", "/express-hub");
+        cy.get('.css-hlgwow').last().find('input').type('okhla');
+        cy.press('Enter');
+        cy.wait('@ExpressHubShipments').then(({ response }) => {
+            expect(response.statusCode).to.eq(200);
+        });
+
+        cy.contains("Ongoing").click();
+        cy.wait('@ExpressHubShipments').then(({ response }) => {
+            expect(response.statusCode).to.eq(200);
+        });
+
+        cy.contains("Completed").click();
+        cy.wait('@ExpressHubShipments').then(({ response }) => {
+            expect(response.statusCode).to.eq(200);
+        });
+
+
+    }
+}
+
+module.exports = new ExpressHub();
