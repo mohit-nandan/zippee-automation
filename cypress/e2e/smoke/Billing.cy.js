@@ -12,5 +12,6 @@ describe("Billing Smoke", () => {
         BillingPage.clickDatepicker();
         BillingPage.clickDeductionsDetailsTab();
         BillingPage.clickInvoiceHistoryTab();
+        BillingPage.downloadInvoice();
     });
 });
