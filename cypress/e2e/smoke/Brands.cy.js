@@ -6,6 +6,7 @@ describe("Brands", () => {
         cy.visit("/");
         cy.contains("Introducing Q-Commerce Fulfillment by Zippee", { timeout: 10000 })
             .should("be.visible");
+        cy.intercept('https://desk.zoho.in/**', { statusCode: 200, body: {} });
     });
 
 
@@ -17,9 +18,9 @@ describe("Brands", () => {
         BrandsPage.clickGstDetailsTab();
         BrandsPage.clickWarehousesTab();
         BrandsPage.clickWebhooksTab();
-        BrandsPage.clickSquishedRulesTab();
         BrandsPage.clickShipmentCommsTab();
         BrandsPage.clickBrandConfigurationsTab();
+        BrandsPage.clickSquishedRulesTab();
     });
 
 });

@@ -1,5 +1,6 @@
 const BasePage = require("../Common/BasePage");
 const BrandRoutes = require("../../api/brandRoutes");
+import "cypress-real-events/support";
 
 class BrandsPage extends BasePage {
 
@@ -81,17 +82,6 @@ class BrandsPage extends BasePage {
         cy.contains("Webhooks").should("be.visible");
     }
 
-    clickSquishedRulesTab() {
-        cy.intercept("GET", BrandRoutes.squishedRules).as("brandSquishedRules");
-
-        cy.contains("li", "Rules")
-            .should("be.visible")
-            .click();
-
-        cy.wait("@brandSquishedRules");
-        cy.contains("Brand Rules").should("be.visible");
-    }
-
     clickShipmentCommsTab() {
         cy.intercept("GET", BrandRoutes.shipmentComms).as("brandShipmentComms");
 
@@ -112,6 +102,70 @@ class BrandsPage extends BasePage {
 
         cy.wait("@brandConfigurations");
         cy.contains("Standard Delivery").should("be.visible");
+    }
+
+    clickSquishedRulesTab() {
+        cy.intercept("GET", BrandRoutes.squishedRules).as("brandSquishedRules");
+        cy.intercept("GET", BrandRoutes.brandRules).as("brandRules");
+
+        cy.contains("li", "Rules")
+            .should("be.visible")
+            .click();
+
+        cy.wait("@brandSquishedRules");
+        cy.contains("Brand Rules").should("be.visible");
+        cy.wait("@brandRules").then(({ request, response }) => {
+
+            let found = false;
+
+            response.body.data.forEach(element => {
+                if (element.darkstore_profile_name == 'geofence_1500') {
+                    found = true;
+                }
+            })
+
+            if (!found) {
+
+                cy.log("geofence_1500 not found");
+
+                cy.contains('button', 'Edit').click();
+
+                cy.get('.css-19bb58m')
+                    .find('input')
+                    .type('geofence_1500{enter}');
+
+                cy.contains('button', 'Preview').click();
+                cy.contains('button', 'Add').click();
+
+                cy.get('tbody tr:last-child .cursor-move')
+                    .scrollIntoView()
+                    .realMouseDown();
+
+                cy.get('table tbody').first()
+                    .realMouseMove(0, 0, { position: "topLeft" })
+                    .wait(200)
+                    .realMouseUp();
+
+                cy.contains('button', 'Save').click();
+                cy.contains('button', 'Apply').click();
+
+            } else {
+                cy.contains('button', 'Edit').click();
+                cy.contains('tbody tr', 'geofence_1500')
+                    .find('.cursor-move')
+                    .scrollIntoView()
+                    .realMouseDown();
+
+                cy.get('table tbody').first()
+                    .realMouseMove(0, 0, { position: "topLeft" })
+                    .wait(200)
+                    .realMouseUp();
+
+                cy.contains('button', 'Save').click();
+                cy.contains('button', 'Apply').click();
+            }
+
+        })
     }
 }
 
