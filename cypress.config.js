@@ -1,7 +1,10 @@
 const { defineConfig } = require("cypress");
+const { getDbConfig } = require("./cypress/support/db/dbconfig");
+const { queryDb } = require("./cypress/support/db/db");
 const fs = require("fs");
 const path = require("path");
 const xlsx = require("xlsx");
+
 
 function validateFileStability(filePath, timeout = 30000) {
   return new Promise((resolve, reject) => {
@@ -42,6 +45,17 @@ module.exports = defineConfig({
     viewportHeight: 900,
 
     setupNodeEvents(on, config) {
+
+      const file = config.env.configFile || "staging";
+      const envConfig = getConfigurationByFile(file);
+      const envName = config.env.environment || "staging";
+      const dbConfig = getDbConfig(envName);
+      console.log("Running Tests On:", envName);
+      console.log("Host:", dbConfig.host);
+      console.log("User:", dbConfig.user);
+      console.log("Database:", dbConfig.database);
+      console.log("Port:", dbConfig.port);
+
       on('task', {
         waitForFileStable: (fileName) => {
           const filePath = path.join(__dirname, 'cypress/downloads', fileName);
@@ -65,11 +79,13 @@ module.exports = defineConfig({
             fs.unlinkSync(filePath);
           }
           return null;
-        }
+        },
+
+        queryDb: async (query) => {
+          return queryDb(dbConfig, query);
+        },
       });
 
-      const file = config.env.configFile || "staging";
-      const envConfig = getConfigurationByFile(file);
       return {
         ...config,
         ...envConfig,

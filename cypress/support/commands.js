@@ -26,3 +26,7 @@ Cypress.Commands.add("loginSession", () => {
     });
 
 });
+
+Cypress.Commands.add("dbQuery", (query) => {
+    return cy.task("queryDb", query);
+});

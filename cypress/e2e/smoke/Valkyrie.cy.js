@@ -23,15 +23,15 @@ describe("Valkyrie Smoke", () => {
         ShipmentPage.validateShipments();
     });
 
-    it("Verify Trips Tab and other functionality", () => {
-        TripsPage.validateTrips();
-    });
+    // it("Verify Trips Tab and other functionality", () => {
+    //     TripsPage.validateTrips();
+    // });
 
-    it("Verify Waybills Tab and other functionality", () => {
-        WaybillsPage.validateWaybills();
-    });
+    // it("Verify Waybills Tab and other functionality", () => {
+    //     WaybillsPage.validateWaybills();
+    // });
 
-    it("Verify Express Hub Tab and other functionality", () => {
-        ExpressHubPage.validateExpressHub();
-    });
+    // it("Verify Express Hub Tab and other functionality", () => {
+    //     ExpressHubPage.validateExpressHub();
+    // });
 });

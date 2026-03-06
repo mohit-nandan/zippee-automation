@@ -1,6 +1,6 @@
 const basePage = require("../Common/BasePage");
 const ValkyrieRoutes = require("../../api/Valkyrie");
-
+import "../../commands"
 class Shipment extends basePage {
     constructor() {
         super();
@@ -48,6 +48,12 @@ class Shipment extends basePage {
         cy.wait('@shipmentsView').then(({ request, response }) => {
             expect(request.body.slotted_filter).to.eq('all');
             expect(response.statusCode).to.eq(200);
+        });
+
+        cy.dbQuery(`
+             SELECT * FROM zippeeriderapp_trip WHERE id = 5218;
+            `).then((result) => {
+            console.log(result);
         });
 
 

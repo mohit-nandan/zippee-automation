@@ -1,10 +1,10 @@
 {
-    "baseUrl": "https://staging.zfwhospitality.in",
+    "baseUrl": "https://preprod.zfwhospitality.in",
     "env": {
-        "adminUser": "testums11@gmail.com",
-        "adminPass": "QWERTY!@#$%",
+        "adminUser": "preprod_user@example.com",
+        "adminPass": "your_preprod_pass",
         "db": {
-            "host": "your_staging_db_host",
+            "host": "your_preprod_db_host",
             "user": "your_user",
             "password": "your_password",
             "database": "your_database",
