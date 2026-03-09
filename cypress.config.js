@@ -4,6 +4,9 @@ const { queryDb } = require("./cypress/support/db/db");
 const fs = require("fs");
 const path = require("path");
 const xlsx = require("xlsx");
+const dotenv = require('dotenv');
+const envPath = path.resolve(__dirname, '.env');
+dotenv.config({ path: envPath });
 
 
 function validateFileStability(filePath, timeout = 30000) {
@@ -48,13 +51,29 @@ module.exports = defineConfig({
 
       const file = config.env.configFile || "staging";
       const envConfig = getConfigurationByFile(file);
-      const envName = config.env.environment || "staging";
-      const dbConfig = getDbConfig(envName);
-      console.log("Running Tests On:", envName);
-      console.log("Host:", dbConfig.host);
-      console.log("User:", dbConfig.user);
-      console.log("Database:", dbConfig.database);
-      console.log("Port:", dbConfig.port);
+      const envName = (config.env.environment || "staging").toUpperCase();
+      const dbConfig = getDbConfig(envName.toLowerCase());
+
+      // Map .env variables to config.env for easy access
+      // We read the file manually because standard process.env can truncate at # or % on some systems
+      const envContent = fs.existsSync(envPath) ? fs.readFileSync(envPath, 'utf8') : '';
+
+      const getRawEnvValue = (key) => {
+        const regex = new RegExp(`^${key}=(.*)$`, 'm');
+        const match = envContent.match(regex);
+        if (match) {
+          return match[1].trim().replace(/^["']|["']$/g, '');
+        }
+        return process.env[key]; // Fallback to process.env
+      };
+
+      const shipmentApiConfig = {
+        username: getRawEnvValue(`${envName}_CLICKPOST_SHIPMENT_API_USERNAME`),
+        password: getRawEnvValue(`${envName}_CLICKPOST_SHIPMENT_API_PASSWORD`),
+        apiKey: getRawEnvValue(`${envName}_CLICKPOST_API_KEY`)
+      };
+
+      config.env.shipmentApi = shipmentApiConfig;
 
       on('task', {
         waitForFileStable: (fileName) => {
@@ -89,6 +108,10 @@ module.exports = defineConfig({
       return {
         ...config,
         ...envConfig,
+        env: {
+          ...config.env,
+          ...envConfig.env,
+        },
       };
     },
   },

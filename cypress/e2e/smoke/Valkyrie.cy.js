@@ -3,6 +3,7 @@ const TripsPage = require("../../support/pages/Valkyrie/Trips");
 const WaybillsPage = require("../../support/pages/Valkyrie/Waybills");
 const ExpressHubPage = require("../../support/pages/Valkyrie/ExpressHub");
 
+
 describe("Valkyrie Smoke", () => {
     beforeEach(() => {
 
@@ -20,6 +21,8 @@ describe("Valkyrie Smoke", () => {
     });
 
     it("Verify Shipments Tab and other functionality", () => {
+        ShipmentPage.createShipmentViaAPI()
+        // ShipmentPage.checkAwb()
         ShipmentPage.validateShipments();
     });
 
