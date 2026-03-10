@@ -30,3 +30,25 @@ Cypress.Commands.add("loginSession", () => {
 Cypress.Commands.add("dbQuery", (query) => {
     return cy.task("queryDb", query);
 });
+
+Cypress.Commands.add("dbQueryWithRetry", (query, options = {}) => {
+    const timeout = options.timeout || 30000;
+    const interval = options.interval || 2000;
+    const start = Date.now();
+
+    const check = () => {
+        return cy.task("queryDb", query).then((response) => {
+            if (response && response.length > 0) {
+                return response;
+            }
+
+            if (Date.now() - start > timeout) {
+                throw new Error(`Database query timed out after ${timeout}ms: ${query}`);
+            }
+
+            return cy.wait(interval).then(check);
+        });
+    };
+
+    return check();
+});

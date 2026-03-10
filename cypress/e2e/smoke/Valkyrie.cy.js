@@ -22,8 +22,9 @@ describe("Valkyrie Smoke", () => {
 
     it("Verify Shipments Tab and other functionality", () => {
         ShipmentPage.createShipmentViaAPI()
-        // ShipmentPage.checkAwb()
         ShipmentPage.validateShipments();
+        ShipmentPage.checkWhatsappMessaged()
+        ShipmentPage.checkwehbookHistorylogs()
     });
 
     // it("Verify Trips Tab and other functionality", () => {

@@ -1,7 +1,6 @@
 const basePage = require("../Common/BasePage");
 const ValkyrieRoutes = require("../../api/Valkyrie");
 import "../../commands"
-import { queryDb } from "../../db/db";
 const MainSiteRoutes = require("../../api/MainSiteRoutes");
 const shipmentData = require("../../../fixtures/CreateShipment");
 
@@ -131,7 +130,15 @@ class Shipment extends basePage {
 
     checkWhatsappMessaged() {
         cy.get('@awb').then((awb) => {
-            // queryDb(`SELECT * FROM zfw_wa_comm_logs WHERE ref_code  = ${awb};`)
+            cy.task("queryDb", `SELECT * FROM zfw_wa_comm_logs WHERE ref_code  = "${awb}";`)
+        });
+    }
+
+    checkwehbookHistorylogs() {
+        cy.get('@awb').then((awb) => {
+            cy.task("queryDb", `SELECT * FROM zfw_webhook_history WHERE reference_code  = "${awb}"`).then((response) => {
+                expect(response.length).to.be.greaterThan(0)
+            })
         });
     }
 }
