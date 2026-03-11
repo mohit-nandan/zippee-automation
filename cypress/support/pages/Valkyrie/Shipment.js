@@ -74,6 +74,22 @@ class Shipment extends basePage {
             method: 'POST',
             url: ValkyrieRoutes.shipementsView
         }).as('shipmentsView');
+
+        cy.intercept({
+            method: 'PUT',
+            url: ValkyrieRoutes.overrideStatus
+        }).as('overrideStatus');
+
+        cy.intercept({
+            method: 'GET',
+            url: ValkyrieRoutes.shipmentLogs
+        }).as('shipmentLogs');
+
+        cy.intercept({
+            method: 'POST',
+            url: ValkyrieRoutes.shipmentdetails
+        }).as('shipmentdetails');
+
         cy.contains("a", "Valkyrie").realHover();
         cy.contains("Deliveries").click();
         cy.url().should("include", "/pnd/shipments");
@@ -124,20 +140,99 @@ class Shipment extends basePage {
             cy.get('input[type="radio"]').first().click();
             cy.contains('label', 'Customer Unavailable').click();
             cy.contains('button', 'Update').click();
+            cy.wait('@overrideStatus').then(({ response }) => {
+                expect(response.statusCode).to.eq(200);
+            });
+
+            cy.get('button').find('img[alt="View Details"]').click();
+            cy.contains('Override Status').click();
+            cy.get('.css-1xc3v61-indicatorContainer').eq(1).click();
+            cy.contains('CANCELLED').click();
+            cy.get('input[type="radio"]').first().click();
+            cy.contains('label', 'Customer Unavailable').click();
+            cy.contains('button', 'Update').click();
+            cy.wait('@overrideStatus').then(({ response }) => {
+                expect(response.statusCode).to.eq(200);
+            });
+
+            cy.get('button').find('img[alt="View Details"]').click();
+            cy.contains('Override Status').click();
+            cy.get('.css-1xc3v61-indicatorContainer').eq(1).click();
+            cy.contains('RTO').click();
+            cy.get('input[type="radio"]').first().click();
+            cy.contains('label', 'Customer Unavailable').click();
+            cy.contains('button', 'Update').click();
+            cy.wait('@overrideStatus').then(({ response }) => {
+                expect(response.statusCode).to.eq(200);
+            });
+
+            cy.get('button').find('img[alt="View Details"]').click();
+            cy.contains('Override Status').click();
+            cy.get('.css-1xc3v61-indicatorContainer').eq(1).click();
+            cy.contains('DELIVERY_ATTEMPTED').click();
+            cy.get('input[type="radio"]').first().click();
+            cy.contains('label', 'Customer Unavailable').click();
+            cy.contains('button', 'Update').click();
+            cy.wait('@overrideStatus').then(({ response }) => {
+                expect(response.statusCode).to.eq(200);
+            });
         });
+
+        const allowedBackendStatuses = [
+            'DELIVERY_ATTEMPTED',
+            'CANCELLED',
+            'RTO',
+            'DELIVERED',
+            'READY'
+        ];
+
+        const allowedFrontendStatuses = [
+            'Delivery Attempted',
+            'Cancelled',
+            'RTO',
+            'Delivered',
+            'Ready'
+        ];
+
+        cy.get('table tbody tr td').eq(1).find('a').click();
+        cy.wait('@shipmentdetails').then(({ response }) => {
+            expect(response.statusCode).to.eq(200);
+        });
+        cy.contains('a', 'Go To Logs').click({ force: true });
+
+        cy.wait('@shipmentLogs').then(({ response }) => {
+
+            expect(response.statusCode).to.eq(200);
+
+            response.body.data.forEach((log) => {
+                expect(log.status).to.be.oneOf(allowedBackendStatuses);
+            });
+
+        });
+        cy.get('h3').each(($el) => {
+            const text = $el.text().trim();
+            expect(allowedFrontendStatuses).to.include(text);
+        });
+
 
     }
 
     checkWhatsappMessaged() {
         cy.get('@awb').then((awb) => {
-            cy.task("queryDb", `SELECT * FROM zfw_wa_comm_logs WHERE ref_code  = "${awb}";`)
+            cy.task("queryDb", `SELECT * FROM zfw_wa_comm_logs WHERE ref_code  = "${awb}";`).then((response) => {
+                expect(response.length).to.be.greaterThan(0)
+            })
         });
     }
 
     checkwehbookHistorylogs() {
+        const webhookTypes = ['DELIVERED', 'CANCELLED', 'RTO', 'Delivery_Attempted'];
+
         cy.get('@awb').then((awb) => {
-            cy.task("queryDb", `SELECT * FROM zfw_webhook_history WHERE reference_code  = "${awb}"`).then((response) => {
-                expect(response.length).to.be.greaterThan(0)
+            webhookTypes.forEach((webhookType) => {
+                cy.task("queryDb", `SELECT * FROM zfw_webhook_history WHERE reference_code  = "${awb}" and webhook_type = '${webhookType}';`).then((response) => {
+                    expect(response.length).to.be.greaterThan(0)
+                })
             })
         });
     }
