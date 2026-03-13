@@ -62,7 +62,10 @@ class Shipment extends basePage {
                 body: shipmentData
             }).then((shipmentResponse) => {
                 expect(shipmentResponse.status).to.eq(200);
-                return cy.wrap(shipmentResponse.body.data.awb).as('awb');
+                const awb = shipmentResponse.body.data.awb;
+                Cypress.env('awb', awb);
+                cy.log(`AWB Captured: ${awb}`);
+                return cy.wrap(awb).as('awb');
             });
         });
     }
@@ -236,6 +239,10 @@ class Shipment extends basePage {
             })
         });
     }
+
+
+
+
 }
 
 module.exports = new Shipment();

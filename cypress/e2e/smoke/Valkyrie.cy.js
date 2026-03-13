@@ -2,6 +2,8 @@ const ShipmentPage = require("../../support/pages/Valkyrie/Shipment");
 const TripsPage = require("../../support/pages/Valkyrie/Trips");
 const WaybillsPage = require("../../support/pages/Valkyrie/Waybills");
 const ExpressHubPage = require("../../support/pages/Valkyrie/ExpressHub");
+const BifrostShipmentsPage = require("../../support/pages/Bifrost/Shipments");
+
 
 
 describe("Valkyrie Smoke", () => {
@@ -25,6 +27,7 @@ describe("Valkyrie Smoke", () => {
         ShipmentPage.validateShipments();
         ShipmentPage.checkWhatsappMessaged()
         ShipmentPage.checkwehbookHistorylogs()
+        BifrostShipmentsPage.clickShipmentsTab();
     });
 
     // it("Verify Trips Tab and other functionality", () => {
