@@ -15,8 +15,13 @@ class ExpressHub extends basePage {
         cy.contains("a", "Valkyrie").realHover();
         cy.contains("Express Hub").click();
         cy.url().should("include", "/express-hub");
-        cy.get('.css-hlgwow').last().find('input').type('okhla');
-        cy.press('Enter');
+        
+        const env = Cypress.env('environment') || 'staging';
+        cy.fixture(`${env}/testData`).then((data) => {
+            const searchLocation = data.expressHub.searchLocation;
+            cy.get('.css-hlgwow').last().find('input').type(searchLocation);
+            cy.press('Enter');
+        });
         cy.wait('@ExpressHubShipments').then(({ response }) => {
             expect(response.statusCode).to.eq(200);
         });

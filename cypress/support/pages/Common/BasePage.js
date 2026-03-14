@@ -32,7 +32,7 @@ class BasePage {
         cy.get(selector).should('not.be.visible');
     }
 
-    // Interaction Helpers
+
     forceClick(selector) {
         cy.get(selector).click({ force: true });
     }

@@ -1,9 +1,8 @@
 const EmergencyCommsPage = require("../../support/pages/Emergency Comms/EmergencyComms");
 
-describe("Emergency Comms", () => {
+describe("Emergency Comms", { tags: '@smoke' }, () => {
     beforeEach(() => {
-        cy.loginSession();
-        cy.visit("/");
+        cy.setupAndNavigate();
         EmergencyCommsPage.clickEmergencyCommsTab();
     });
 

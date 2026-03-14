@@ -20,17 +20,7 @@ class Shipment extends basePage {
         };
         const finalApiKey = shipmentEnv.apiKey;
 
-        cy.log(`Environment: ${envName}`);
-        cy.log(`URL: ${routes.token}`);
-        // Log with markers to see hidden spaces
-        console.log('FINAL AUTH REQUEST:', {
-            url: routes.token,
-            headers: { 'X-API-KEY': finalApiKey },
-            body: finalCredentials
-        });
-
         if (!shipmentData) {
-            cy.log('No shipment data fixture found, skipping API call');
             return cy.wrap(null);
         }
 
@@ -44,11 +34,7 @@ class Shipment extends basePage {
             },
             body: finalCredentials
         }).then((response) => {
-            if (response.status !== 200) {
-                cy.log(`Token API Failed at ${routes.token}!`, response.status, JSON.stringify(response.body));
-                console.error('Token API Error:', response.body);
-            }
-            expect(response.status, `Token API failed: ${JSON.stringify(response.body)}`).to.eq(200);
+            expect(response.status).to.eq(200);
             const token = response.body.data.token;
 
             return cy.request({
@@ -93,92 +79,52 @@ class Shipment extends basePage {
             url: ValkyrieRoutes.shipmentdetails
         }).as('shipmentdetails');
 
+        const clickFilter = (buttonText, expectedFilter) => {
+            cy.contains(buttonText).click({ force: true });
+            cy.wait('@shipmentsView').then(({ request, response }) => {
+                expect(request.body.slotted_filter).to.eq(expectedFilter);
+                expect(response.statusCode).to.eq(200);
+            });
+        };
+
         cy.contains("a", "Valkyrie").realHover();
         cy.contains("Deliveries").click();
         cy.url().should("include", "/pnd/shipments");
+
         cy.wait('@shipmentsView').then(({ request, response }) => {
             expect(request.body.slotted_filter).to.eq('assign_now');
             expect(response.statusCode).to.eq(200);
         });
 
-        cy.contains("Assign Later").click();
-        cy.wait('@shipmentsView').then(({ request, response }) => {
-            expect(request.body.slotted_filter).to.eq('assign_later');
-            expect(response.statusCode).to.eq(200);
-        });
+        clickFilter("Assign Later", "assign_later");
+        clickFilter("Assigned", "assigned");
+        clickFilter("Completed", "completed");
+        clickFilter("Return", "return");
+        clickFilter("All Shipments", "all");
 
-        cy.contains("Assigned").click();
-        cy.wait('@shipmentsView').then(({ request, response }) => {
-            expect(request.body.slotted_filter).to.eq('assigned');
-            expect(response.statusCode).to.eq(200);
-        });
-
-        cy.contains("Completed").click();
-        cy.wait('@shipmentsView').then(({ request, response }) => {
-            expect(request.body.slotted_filter).to.eq('completed');
-            expect(response.statusCode).to.eq(200);
-        });
-
-        cy.contains("Return").click();
-        cy.wait('@shipmentsView').then(({ request, response }) => {
-            expect(request.body.slotted_filter).to.eq('return');
-            expect(response.statusCode).to.eq(200);
-        });
-
-        cy.contains("All Shipments").click();
-        cy.wait('@shipmentsView').then(({ request, response }) => {
-            expect(request.body.slotted_filter).to.eq('all');
-            expect(response.statusCode).to.eq(200);
-        });
+        const overrideShipmentStatus = (statusToSelect, reasonLabel) => {
+            cy.get('button').find('img[alt="View Details"]').click();
+            cy.contains('Override Status').click();
+            cy.get('.css-1xc3v61-indicatorContainer').eq(1).click();
+            cy.contains(statusToSelect).click();
+            cy.get('input[type="radio"]').first().click();
+            cy.contains('label', reasonLabel).click();
+            cy.contains('button', 'Update').click();
+            cy.wait('@overrideStatus').then(({ response }) => {
+                expect(response.statusCode).to.eq(200);
+            });
+        };
 
         cy.get('@awb').then((awb) => {
             cy.get('input[type="search"]').first().type(awb).type('{enter}');
             cy.wait('@shipmentsView').then(({ response }) => {
                 expect(response.statusCode).to.eq(200);
             });
-            cy.get('button').find('img[alt="View Details"]').click();
-            cy.contains('Override Status').click();
-            cy.get('.css-1xc3v61-indicatorContainer').eq(1).click();
-            cy.contains('DELIVERED').click();
-            cy.get('input[type="radio"]').first().click();
-            cy.contains('label', 'Customer Unavailable').click();
-            cy.contains('button', 'Update').click();
-            cy.wait('@overrideStatus').then(({ response }) => {
-                expect(response.statusCode).to.eq(200);
-            });
 
-            cy.get('button').find('img[alt="View Details"]').click();
-            cy.contains('Override Status').click();
-            cy.get('.css-1xc3v61-indicatorContainer').eq(1).click();
-            cy.contains('CANCELLED').click();
-            cy.get('input[type="radio"]').first().click();
-            cy.contains('label', 'Customer Unavailable').click();
-            cy.contains('button', 'Update').click();
-            cy.wait('@overrideStatus').then(({ response }) => {
-                expect(response.statusCode).to.eq(200);
-            });
-
-            cy.get('button').find('img[alt="View Details"]').click();
-            cy.contains('Override Status').click();
-            cy.get('.css-1xc3v61-indicatorContainer').eq(1).click();
-            cy.contains('RTO').click();
-            cy.get('input[type="radio"]').first().click();
-            cy.contains('label', 'Customer Unavailable').click();
-            cy.contains('button', 'Update').click();
-            cy.wait('@overrideStatus').then(({ response }) => {
-                expect(response.statusCode).to.eq(200);
-            });
-
-            cy.get('button').find('img[alt="View Details"]').click();
-            cy.contains('Override Status').click();
-            cy.get('.css-1xc3v61-indicatorContainer').eq(1).click();
-            cy.contains('DELIVERY_ATTEMPTED').click();
-            cy.get('input[type="radio"]').first().click();
-            cy.contains('label', 'Customer Unavailable').click();
-            cy.contains('button', 'Update').click();
-            cy.wait('@overrideStatus').then(({ response }) => {
-                expect(response.statusCode).to.eq(200);
-            });
+            overrideShipmentStatus('DELIVERED', 'Customer Unavailable');
+            overrideShipmentStatus('CANCELLED', 'Customer Unavailable');
+            overrideShipmentStatus('RTO', 'Customer Unavailable');
+            overrideShipmentStatus('DELIVERY_ATTEMPTED', 'Customer Unavailable');
         });
 
         const allowedBackendStatuses = [

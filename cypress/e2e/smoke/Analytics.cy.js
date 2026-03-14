@@ -1,9 +1,8 @@
 import AnalyticsPage from "../../support/pages/Analytics/Analytics";
 
-describe("Analytics", () => {
+describe("Analytics", { tags: '@smoke' }, () => {
     beforeEach(() => {
-        cy.loginSession();
-        cy.visit("/");
+        cy.setupAndNavigate();
         AnalyticsPage.clickAnalyticsTab();
     });
 

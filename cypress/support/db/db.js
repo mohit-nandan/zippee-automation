@@ -5,7 +5,6 @@ let pool;
 async function connectDB(dbConfig) {
     if (!pool) {
         pool = mysql.createPool(dbConfig);
-        console.log("DB Pool Created");
     }
     return pool;
 }

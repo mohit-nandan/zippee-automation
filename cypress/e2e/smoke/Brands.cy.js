@@ -1,12 +1,8 @@
 const BrandsPage = require("../../support/pages/Brands/BrandsPage");
 
-describe("Brands", () => {
+describe("Brands", { tags: '@smoke' }, () => {
     beforeEach(() => {
-        cy.loginSession();
-        cy.visit("/");
-        cy.contains("Introducing Q-Commerce Fulfillment by Zippee", { timeout: 10000 })
-            .should("be.visible");
-        cy.intercept('https://desk.zoho.in/**', { statusCode: 200, body: {} });
+        cy.setupAndNavigate();
     });
 
 

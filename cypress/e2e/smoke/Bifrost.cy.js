@@ -3,12 +3,10 @@ const StoresPage = require("../../support/pages/Bifrost/Stores");
 const DsProfilePage = require("../../support/pages/Bifrost/Ds Profile");
 const ShipmentsPage = require("../../support/pages/Bifrost/Shipments");
 const OrderPage = require("../../support/pages/Bifrost/Order");
-describe("Bifrost", () => {
+describe("Bifrost", { tags: '@smoke' }, () => {
 
     beforeEach(() => {
-        cy.loginSession();
-        cy.visit("/");
-        cy.intercept('https://desk.zoho.in/**', { statusCode: 200, body: {} })
+        cy.setupAndNavigate();
     });
 
     it("Rules", () => {

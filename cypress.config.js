@@ -35,27 +35,28 @@ function validateFileStability(filePath, timeout = 30000) {
   });
 }
 
-function getConfigurationByFile(file) {
-  const pathToConfigFile = `cypress/config/${file}.json`;
-  return JSON.parse(fs.readFileSync(pathToConfigFile));
-}
-
 module.exports = defineConfig({
   e2e: {
     downloadsFolder: 'cypress/downloads',
     specPattern: "cypress/e2e/**/*.cy.js",
     viewportWidth: 1400,
     viewportHeight: 900,
+    video: true,
+    screenshotOnRunFailure: true,
+    reporter: 'cypress-mochawesome-reporter',
+    reporterOptions: {
+      charts: true,
+      reportPageTitle: 'Zippee Automation Report',
+      embeddedScreenshots: true,
+      inlineAssets: true,
+      saveAllAttempts: false,
+    },
 
     setupNodeEvents(on, config) {
+      require('cypress-mochawesome-reporter/plugin')(on);
 
-      const file = config.env.configFile || "staging";
-      const envConfig = getConfigurationByFile(file);
       const envName = (config.env.environment || "staging").toUpperCase();
-      const dbConfig = getDbConfig(envName.toLowerCase());
-
-      // Map .env variables to config.env for easy access
-      // We read the file manually because standard process.env can truncate at # or % on some systems
+      
       const envContent = fs.existsSync(envPath) ? fs.readFileSync(envPath, 'utf8') : '';
 
       const getRawEnvValue = (key) => {
@@ -64,16 +65,24 @@ module.exports = defineConfig({
         if (match) {
           return match[1].trim().replace(/^["']|["']$/g, '');
         }
-        return process.env[key]; // Fallback to process.env
+        return process.env[key];
       };
 
-      const shipmentApiConfig = {
+      const baseUrl = getRawEnvValue(`${envName}_BASE_URL`);
+      if (baseUrl) {
+        config.baseUrl = baseUrl;
+      }
+
+      config.env.adminUser = getRawEnvValue(`${envName}_ADMIN_USER`);
+      config.env.adminPass = getRawEnvValue(`${envName}_ADMIN_PASS`);
+      
+      const dbConfig = getDbConfig(envName);
+
+      config.env.shipmentApi = {
         username: getRawEnvValue(`${envName}_CLICKPOST_SHIPMENT_API_USERNAME`),
         password: getRawEnvValue(`${envName}_CLICKPOST_SHIPMENT_API_PASSWORD`),
         apiKey: getRawEnvValue(`${envName}_CLICKPOST_API_KEY`)
       };
-
-      config.env.shipmentApi = shipmentApiConfig;
 
       on('task', {
         waitForFileStable: (fileName) => {
@@ -104,15 +113,13 @@ module.exports = defineConfig({
           return queryDb(dbConfig, query);
         },
       });
+      
+      config.env.grepFilterSpecs = true;
+      config.env.grepOmitFiltered = true;
 
-      return {
-        ...config,
-        ...envConfig,
-        env: {
-          ...config.env,
-          ...envConfig.env,
-        },
-      };
+      require('@cypress/grep/plugin').plugin(config);
+
+      return config;
     },
   },
 });

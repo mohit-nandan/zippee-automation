@@ -7,11 +7,9 @@ const DeactivatedRidersPage = require("../../support/pages/COD/DeactivatedRiders
 const RidersPage = require("../../support/pages/COD/Riders");
 const RedoLogsPage = require("../../support/pages/COD/RedoLogs");
 
-describe("Settlements Smoke", () => {
+describe("Settlements Smoke", { tags: '@smoke' }, () => {
     beforeEach(() => {
-        cy.loginSession();
-        cy.visit("/");
-        cy.intercept('https://desk.zoho.in/**', { statusCode: 200, body: {} })
+        cy.setupAndNavigate();
     });
 
     it("Verify Settlements Tab and other functionality", () => {

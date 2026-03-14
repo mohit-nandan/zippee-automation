@@ -1,0 +1,12 @@
+{
+  "brands": {
+    "searchName": "testing_f",
+    "geofenceRule": "geofence_1500"
+  },
+  "expressHub": {
+    "searchLocation": "okhla"
+  },
+  "billing": {
+    "searchBrand": "testing_fabbox"
+  }
+}

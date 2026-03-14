@@ -1,10 +1,8 @@
 const BillingPage = require("../../support/pages/Billing/Billing");
 
-describe("Billing Smoke", () => {
+describe("Billing Smoke", { tags: '@smoke' }, () => {
     beforeEach(() => {
-        cy.loginSession();
-        cy.visit("/");
-        cy.intercept('https://desk.zoho.in/**', { statusCode: 200, body: {} })
+        cy.setupAndNavigate();
         BillingPage.clickBillingTab();
     });
 

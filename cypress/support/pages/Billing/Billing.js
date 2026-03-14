@@ -92,7 +92,6 @@ class BillingPage extends BasePage {
 
         cy.get("table tbody tr")
             .should("have.length.greaterThan", 0).then(() => {
-                // validate the entire tabl data
                 cy.get('.flex.gap-4.items-center').find('button').find('svg').eq(1).click();
 
                 cy.task('waitForFileStable', 'transaction_history.csv');
@@ -101,26 +100,30 @@ class BillingPage extends BasePage {
                     expect(data).to.not.be.empty;
                 })
 
-                // validate only particular brand data
-                cy.get('.css-19bb58m').find('input').eq(0).type('testing_fabbox').type('{enter}');
-                cy.wait('@transactionHistory');
-                cy.task('deleteFile', 'transaction_history.csv');
-                cy.get('.flex.gap-4.items-center').find('button').find('svg').eq(1).click();
+                const env = Cypress.env('environment') || 'staging';
+                cy.fixture(`${env}/testData`).then((fixtureData) => {
+                    const searchBrand = fixtureData.billing.searchBrand;
 
-                cy.task('waitForFileStable', 'transaction_history.csv');
+                    cy.get('.css-19bb58m').find('input').eq(0).type(`${searchBrand}{enter}`);
+                    cy.wait('@transactionHistory');
+                    cy.task('deleteFile', 'transaction_history.csv');
+                    cy.get('.flex.gap-4.items-center').find('button').find('svg').eq(1).click();
 
-                cy.task('readExcel', 'cypress/downloads/transaction_history.csv').then((data) => {
-                    expect(data, 'Downloaded file is empty').to.not.be.empty;
+                    cy.task('waitForFileStable', 'transaction_history.csv');
 
-                    const invalidBrands = data
-                        .map(row => row.Brand?.trim())
-                        .filter(brand => brand !== 'testing_fabbox');
+                    cy.task('readExcel', 'cypress/downloads/transaction_history.csv').then((excelData) => {
+                        expect(excelData, 'Downloaded file is empty').to.not.be.empty;
 
-                    expect(
-                        invalidBrands,
-                        `Unexpected brands present in report: ${invalidBrands.join(', ')}`
-                    ).to.be.empty;
-                })
+                        const invalidBrands = excelData
+                            .map(row => row.Brand?.trim())
+                            .filter(brand => brand !== searchBrand);
+
+                        expect(
+                            invalidBrands,
+                            `Unexpected brands present in report: ${invalidBrands.join(', ')}`
+                        ).to.be.empty;
+                    });
+                });
 
             })
     }

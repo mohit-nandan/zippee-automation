@@ -1,6 +1,6 @@
 const adminLoginPage = require("../../support/pages/Auth/adminLoginPage");
 
-describe("Admin Login Smoke", () => {
+describe("Admin Login Smoke", { tags: '@smoke' }, () => {
 
     it("should login successfully", () => {
         cy.visit("/");

@@ -6,20 +6,9 @@ const BifrostShipmentsPage = require("../../support/pages/Bifrost/Shipments");
 
 
 
-describe("Valkyrie Smoke", () => {
+describe("Valkyrie Smoke", { tags: '@smoke' }, () => {
     beforeEach(() => {
-
-        cy.loginSession();
-
-        cy.visit("/");
-
-        cy.get('aside', { timeout: 30000 }).should('be.visible');
-
-        cy.contains('a', 'Valkyrie', { timeout: 20000 })
-            .should('be.visible');
-
-        cy.intercept('https://desk.zoho.in/**', { statusCode: 200, body: {} });
-
+        cy.setupAndNavigate();
     });
 
     it("Verify Shipments Tab and other functionality", () => {
@@ -30,15 +19,15 @@ describe("Valkyrie Smoke", () => {
         BifrostShipmentsPage.clickShipmentsTab();
     });
 
-    // it("Verify Trips Tab and other functionality", () => {
-    //     TripsPage.validateTrips();
-    // });
+    it("Verify Trips Tab and other functionality", () => {
+        TripsPage.validateTrips();
+    });
 
-    // it("Verify Waybills Tab and other functionality", () => {
-    //     WaybillsPage.validateWaybills();
-    // });
+    it("Verify Waybills Tab and other functionality", () => {
+        WaybillsPage.validateWaybills();
+    });
 
-    // it("Verify Express Hub Tab and other functionality", () => {
-    //     ExpressHubPage.validateExpressHub();
-    // });
+    it("Verify Express Hub Tab and other functionality", () => {
+        ExpressHubPage.validateExpressHub();
+    });
 });

@@ -1,0 +1,12 @@
+{
+  "brands": {
+    "searchName": "",
+    "geofenceRule": ""
+  },
+  "expressHub": {
+    "searchLocation": ""
+  },
+  "billing": {
+    "searchBrand": ""
+  }
+}
