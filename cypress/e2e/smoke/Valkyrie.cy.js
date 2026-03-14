@@ -11,7 +11,7 @@ describe("Valkyrie Smoke", { tags: '@smoke' }, () => {
         cy.setupAndNavigate();
     });
 
-    it("Verify Shipments Tab and other functionality", () => {
+    it("Verify full Shipment lifecycle: API creation, filter navigation, status overrides, and log verification", () => {
         ShipmentPage.createShipmentViaAPI()
         ShipmentPage.validateShipments();
         ShipmentPage.checkWhatsappMessaged()
@@ -19,15 +19,15 @@ describe("Valkyrie Smoke", { tags: '@smoke' }, () => {
         BifrostShipmentsPage.clickShipmentsTab();
     });
 
-    it("Verify Trips Tab and other functionality", () => {
+    it("Verify Trips module navigation and status filtering (Created, Ongoing, Completed)", () => {
         TripsPage.validateTrips();
     });
 
-    it("Verify Waybills Tab and other functionality", () => {
+    it("Verify access and data loading in the Print Waybills module", () => {
         WaybillsPage.validateWaybills();
     });
 
-    it("Verify Express Hub Tab and other functionality", () => {
+    it("Verify Express Hub module location search and status filtering", () => {
         ExpressHubPage.validateExpressHub();
     });
 });

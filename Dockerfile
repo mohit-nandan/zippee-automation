@@ -1,4 +1,4 @@
-FROM cypress/included:13.6.2
+FROM cypress/included:15.10.0
 
 WORKDIR /app
 
@@ -8,4 +8,4 @@ RUN npm install
 
 COPY . .
 
-ENTRYPOINT ["npx", "cypress", "run", "--browser", "chrome", "--headless"]
+ENTRYPOINT ["npx", "cypress", "run", "--browser", "chrome"]

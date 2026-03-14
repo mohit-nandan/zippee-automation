@@ -2,7 +2,7 @@ const adminLoginPage = require("../../support/pages/Auth/adminLoginPage");
 
 describe("Admin Login Smoke", { tags: '@smoke' }, () => {
 
-    it("should login successfully", () => {
+    it("Verify successful Admin login and landing page visibility", () => {
         cy.visit("/");
         adminLoginPage.login(
             Cypress.env("adminUser"),

@@ -9,23 +9,23 @@ describe("Bifrost", { tags: '@smoke' }, () => {
         cy.setupAndNavigate();
     });
 
-    it("Rules", () => {
+    it("Verify accessibility and data loading in Bifrost Rules table", () => {
         RulesPage.clickRulesTab();
     });
 
-    it("Stores", () => {
+    it("Verify accessibility and data loading in Bifrost Stores table", () => {
         StoresPage.clickStoresTab();
     });
 
-    it("DS Profile", () => {
+    it("Verify accessibility and data loading in Bifrost DS Profile table", () => {
         DsProfilePage.clickDsProfileTab();
     });
 
-    it("Shipments", () => {
+    it("Verify tracking events, AWB search, and last mile logs in Bifrost Shipments", () => {
         ShipmentsPage.clickShipmentsTab();
     });
 
-    it("Order", () => {
+    it("Verify accessibility and data loading in Bifrost Orders table", () => {
         OrderPage.clickOrderTab();
     });
 });

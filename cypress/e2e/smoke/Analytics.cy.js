@@ -6,7 +6,7 @@ describe("Analytics", { tags: '@smoke' }, () => {
         AnalyticsPage.clickAnalyticsTab();
     });
 
-    it("Verify Analytics Tab and other functionality", () => {
+    it("Verify Analytics KPI dashboards for Operations, Business, and Brands", () => {
         AnalyticsPage.clickOperationTab();
         AnalyticsPage.clickBusinessTab();
         AnalyticsPage.clickBrandsTab();

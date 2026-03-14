@@ -6,7 +6,7 @@ describe("Emergency Comms", { tags: '@smoke' }, () => {
         EmergencyCommsPage.clickEmergencyCommsTab();
     });
 
-    it("Verify Emergency Comms Tab and other functionality", () => {
+    it("Verify Emergency Comms menu navigation and visibility of upload logs", () => {
         EmergencyCommsPage.clickCommsLogsTab();
     });
 });

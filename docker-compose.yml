@@ -4,4 +4,4 @@ services:
     container_name: zippee_cypress
     volumes:
       - .:/app
-    command: npx cypress run --env configFile=staging
+    command: npx cypress run --env environment=staging,grepTags=@smoke

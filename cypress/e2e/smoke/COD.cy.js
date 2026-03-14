@@ -12,38 +12,38 @@ describe("Settlements Smoke", { tags: '@smoke' }, () => {
         cy.setupAndNavigate();
     });
 
-    it("Verify Settlements Tab and other functionality", () => {
+    it("Verify Settlement KPI data for Riders, Darkstores, Company, and Brands", () => {
         SettlementsPage.ValidateRidersKPI();
         SettlementsPage.validateDarkstoresKPI();
         SettlementsPage.validateCompanyKPI();
         SettlementsPage.validateBrandsKPI();
     });
 
-    it("Verify Attendence Tab and other functionality", () => {
+    it("Verify Rider Attendance menu navigation and data loading", () => {
         AttendencePage.validateAttendence();
     });
 
-    it("Verify Payouts Tab and other functionality", () => {
+    it("Verify Payouts Console access and summary data loading", () => {
         PayoutsPage.validatePayouts();
     });
 
-    it("Verify Templates Tab and other functionality", () => {
+    it("Verify access to the Create New Payroll Template module", () => {
         TemplatesPage.validateTemplates();
     });
 
-    it("Verify Payroll Tab and other functionality", () => {
+    it("Verify Rider Payroll menu navigation and record visibility", () => {
         PayrollPage.validatePayroll();
     });
 
-    it("Verify Deactivated Riders Tab and other functionality", () => {
+    it("Verify Deactivated Riders module access and data loading", () => {
         DeactivatedRidersPage.validateDeactivatedRiders();
     });
 
-    it("Verify Riders KYC Tab and other functionality", () => {
+    it("Verify Riders KYC module navigation and data loading", () => {
         RidersPage.validateRidersKYC();
     });
 
-    it("Verify Redo Logs Tab and other functionality", () => {
+    it("Verify Redo Logs module access and data loading", () => {
         RedoLogsPage.validateRedoLogs();
     });
 

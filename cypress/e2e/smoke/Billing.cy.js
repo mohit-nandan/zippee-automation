@@ -6,7 +6,7 @@ describe("Billing Smoke", { tags: '@smoke' }, () => {
         BillingPage.clickBillingTab();
     });
 
-    it("Verify Billing Tab and other functionality", () => {
+    it("Verify Billing overview, date filters, and CSV report download with brand filtering", () => {
         BillingPage.clickDatepicker();
         BillingPage.clickDeductionsDetailsTab();
         BillingPage.clickInvoiceHistoryTab();

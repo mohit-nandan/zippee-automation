@@ -6,7 +6,7 @@ describe("Brands", { tags: '@smoke' }, () => {
     });
 
 
-    it(" verify brand page and other functionality", () => {
+    it("Verify Brand details, tab navigation (GST, Commercials, etc.), and Rule priority management", () => {
         BrandsPage.clickBrandsTab();
         BrandsPage.searchandVerifyBrand();
         BrandsPage.verifyBrandOverview();
