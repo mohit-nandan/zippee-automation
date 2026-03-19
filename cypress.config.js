@@ -67,7 +67,8 @@ module.exports = defineConfig({
       const getFileEnvValue = (key) => {
         const regex = new RegExp(`^${key}=(.*)$`, 'm');
         const match = envContent.match(regex);
-        return match ? match[1].trim().replace(/^["']|["']$/g, '') : null;
+        let value = match ? match[1].trim().replace(/^["']|["']$/g, '') : null;
+        return value || process.env[key] || null;
       };
 
       config.env.environment = envName.toLowerCase();

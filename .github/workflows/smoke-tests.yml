@@ -58,3 +58,15 @@ jobs:
         env:
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PROD_BASE_URL: ${{ secrets.PROD_BASE_URL }}
+          PROD_ADMIN_USER: ${{ secrets.PROD_ADMIN_USER }}
+          PROD_ADMIN_PASS: ${{ secrets.PROD_ADMIN_PASS }}
+          PROD_DB_HOST: ${{ secrets.PROD_DB_HOST }}
+          PROD_DB_USER: ${{ secrets.PROD_DB_USER }}
+          PROD_DB_PASSWORD: ${{ secrets.PROD_DB_PASSWORD }}
+          PROD_DB_NAME: ${{ secrets.PROD_DB_NAME }}
+          PROD_DB_PORT: ${{ secrets.PROD_DB_PORT }}
+          PROD_CLICKPOST_API_KEY: ${{ secrets.PROD_CLICKPOST_API_KEY }}
+          PROD_CLICKPOST_SHIPMENT_API_USERNAME: ${{ secrets.PROD_CLICKPOST_SHIPMENT_API_USERNAME }}
+          PROD_CLICKPOST_SHIPMENT_API_PASSWORD: ${{ secrets.PROD_CLICKPOST_SHIPMENT_API_PASSWORD }}
+          PROD_X_API_KEY: ${{ secrets.PROD_X_API_KEY }}
