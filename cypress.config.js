@@ -36,6 +36,7 @@ function validateFileStability(filePath, timeout = 30000) {
 }
 
 module.exports = defineConfig({
+  projectId: "5kh3pk",
   e2e: {
     downloadsFolder: 'cypress/downloads',
     specPattern: "cypress/e2e/**/*.cy.js",

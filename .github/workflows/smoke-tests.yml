@@ -1,0 +1,59 @@
+name: Daily Smoke Tests
+
+on:
+  schedule:
+    # 8:00 AM IST = 02:30 AM UTC
+    - cron: '30 2 * * *'
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to run tests against'
+        required: true
+        default: 'prod'
+        type: choice
+        options:
+          - staging
+          - preprod
+          - prod
+
+jobs:
+  cypress-run:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Create .env file
+        run: |
+          echo "PROD_BASE_URL=${{ secrets.PROD_BASE_URL }}" >> .env
+          echo "PROD_ADMIN_USER=${{ secrets.PROD_ADMIN_USER }}" >> .env
+          echo "PROD_ADMIN_PASS=${{ secrets.PROD_ADMIN_PASS }}" >> .env
+          echo "PROD_DB_HOST=${{ secrets.PROD_DB_HOST }}" >> .env
+          echo "PROD_DB_USER=${{ secrets.PROD_DB_USER }}" >> .env
+          echo "PROD_DB_PASSWORD=${{ secrets.PROD_DB_PASSWORD }}" >> .env
+          echo "PROD_DB_NAME=${{ secrets.PROD_DB_NAME }}" >> .env
+          echo "PROD_DB_PORT=${{ secrets.PROD_DB_PORT }}" >> .env
+          echo "PROD_CLICKPOST_API_KEY=${{ secrets.PROD_CLICKPOST_API_KEY }}" >> .env
+          echo "PROD_CLICKPOST_SHIPMENT_API_USERNAME=${{ secrets.PROD_CLICKPOST_SHIPMENT_API_USERNAME }}" >> .env
+          echo "PROD_CLICKPOST_SHIPMENT_API_PASSWORD=${{ secrets.PROD_CLICKPOST_SHIPMENT_API_PASSWORD }}" >> .env
+          echo "PROD_X_API_KEY=${{ secrets.PROD_X_API_KEY }}" >> .env
+          # Add staging/preprod if needed later
+
+      - name: Cypress run
+        uses: cypress-io/github-action@v6
+        with:
+          record: true
+          parallel: false
+          env: environment=${{ github.event.inputs.environment || 'prod' }},grep=@smoke
+        env:
+          CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
