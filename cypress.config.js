@@ -74,9 +74,12 @@ module.exports = defineConfig({
       config.env.environment = envName.toLowerCase();
 
       const baseUrl = getFileEnvValue(`${envName}_BASE_URL`);
+      console.log(`[Cypress Config] Looked for ${envName}_BASE_URL, found: "${baseUrl}"`);
       if (baseUrl) {
         config.baseUrl = baseUrl;
         console.log(`[Cypress Config] Base URL set to: ${baseUrl}`);
+      } else {
+        console.error(`[Cypress Config] WARNING: No Base URL found for ${envName}!`);
       }
 
       config.env.adminUser = getFileEnvValue(`${envName}_ADMIN_USER`);

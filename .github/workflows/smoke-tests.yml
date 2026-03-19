@@ -33,22 +33,6 @@ jobs:
       - name: Install dependencies
         run: npm ci || npm install
 
-      - name: Create .env file
-        run: |
-          echo "PROD_BASE_URL=${{ secrets.PROD_BASE_URL }}" >> .env
-          echo "PROD_ADMIN_USER=${{ secrets.PROD_ADMIN_USER }}" >> .env
-          echo "PROD_ADMIN_PASS=${{ secrets.PROD_ADMIN_PASS }}" >> .env
-          echo "PROD_DB_HOST=${{ secrets.PROD_DB_HOST }}" >> .env
-          echo "PROD_DB_USER=${{ secrets.PROD_DB_USER }}" >> .env
-          echo "PROD_DB_PASSWORD=${{ secrets.PROD_DB_PASSWORD }}" >> .env
-          echo "PROD_DB_NAME=${{ secrets.PROD_DB_NAME }}" >> .env
-          echo "PROD_DB_PORT=${{ secrets.PROD_DB_PORT }}" >> .env
-          echo "PROD_CLICKPOST_API_KEY=${{ secrets.PROD_CLICKPOST_API_KEY }}" >> .env
-          echo "PROD_CLICKPOST_SHIPMENT_API_USERNAME=${{ secrets.PROD_CLICKPOST_SHIPMENT_API_USERNAME }}" >> .env
-          echo "PROD_CLICKPOST_SHIPMENT_API_PASSWORD=${{ secrets.PROD_CLICKPOST_SHIPMENT_API_PASSWORD }}" >> .env
-          echo "PROD_X_API_KEY=${{ secrets.PROD_X_API_KEY }}" >> .env
-          # Add staging/preprod if needed later
-
       - name: Cypress run
         uses: cypress-io/github-action@v6
         with:
@@ -70,3 +54,5 @@ jobs:
           PROD_CLICKPOST_SHIPMENT_API_USERNAME: ${{ secrets.PROD_CLICKPOST_SHIPMENT_API_USERNAME }}
           PROD_CLICKPOST_SHIPMENT_API_PASSWORD: ${{ secrets.PROD_CLICKPOST_SHIPMENT_API_PASSWORD }}
           PROD_X_API_KEY: ${{ secrets.PROD_X_API_KEY }}
+          # Also set standard Cypress env vars as fallbacks
+          CYPRESS_BASE_URL: ${{ secrets.PROD_BASE_URL }}
