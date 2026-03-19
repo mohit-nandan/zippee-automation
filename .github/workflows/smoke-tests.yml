@@ -33,6 +33,14 @@ jobs:
       - name: Install dependencies
         run: npm ci || npm install
 
+      - name: Env Sanity Check
+        run: |
+          echo "Checking Secrets (will print 'true' if set, 'false' if empty):"
+          echo "PROD_BASE_URL is set: ${{ secrets.PROD_BASE_URL != '' }}"
+          echo "PROD_ADMIN_USER is set: ${{ secrets.PROD_ADMIN_USER != '' }}"
+          echo "PROD_ADMIN_PASS is set: ${{ secrets.PROD_ADMIN_PASS != '' }}"
+          echo "CYPRESS_RECORD_KEY is set: ${{ secrets.CYPRESS_RECORD_KEY != '' }}"
+
       - name: Cypress run
         uses: cypress-io/github-action@v6
         with:
@@ -42,6 +50,7 @@ jobs:
         env:
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          CYPRESS_ENVIRONMENT: ${{ github.event.inputs.environment || 'prod' }}
           PROD_BASE_URL: ${{ secrets.PROD_BASE_URL }}
           PROD_ADMIN_USER: ${{ secrets.PROD_ADMIN_USER }}
           PROD_ADMIN_PASS: ${{ secrets.PROD_ADMIN_PASS }}

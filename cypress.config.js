@@ -60,9 +60,9 @@ module.exports = defineConfig({
       const allKeys = envContent.split('\n').map(l => l.split('=')[0].trim()).filter(k => k && !k.startsWith('#'));
       console.log(`[Cypress Config] Keys found in .env: ${allKeys.length}`);
 
-      let rawEnv = config.env.environment || "staging";
+      let rawEnv = config.env.environment || process.env.CYPRESS_ENVIRONMENT || "staging";
       let envName = String(rawEnv).split(/[\s,]+/)[0].trim().toUpperCase();
-      console.log(`[Cypress Config] Detected Environment: [${envName}] (from "${rawEnv}")`);
+      console.log(`[Cypress Config] Detected Environment: [${envName}] (raw: "${rawEnv}", from env: "${process.env.CYPRESS_ENVIRONMENT}")`);
 
       const getFileEnvValue = (key) => {
         const regex = new RegExp(`^${key}=(.*)$`, 'm');
