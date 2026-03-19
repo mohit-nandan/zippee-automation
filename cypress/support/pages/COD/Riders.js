@@ -13,7 +13,11 @@ class Riders extends BasePage {
             url: CODRoutes.RidersKYC
         }).as("RidersKYC");
 
-        cy.contains("a", "COD").realHover();
+        cy.get(".sidebar").realHover("left").then(() => {
+            cy.contains("span", "COD")
+                .should("be.visible")
+                .realHover().click();
+        })
         cy.contains('a', /^Riders$/).click();
         cy.url().should('include', 'kyc');
 

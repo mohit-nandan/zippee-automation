@@ -13,9 +13,14 @@ class Attendence extends BasePage {
             url: CODRoutes.Attendence
         }).as("RiderAttendence");
 
-        cy.contains("a", "COD").realHover();
+
+        cy.get(".sidebar").realHover("left").then(() => {
+            cy.contains("span", "COD")
+                .should("be.visible")
+                .realHover().click();
+        })
         cy.contains("Attendance").click();
-        cy.url().should('include', 'cod/attendence');
+        cy.url().should('include', 'attendenceDashboard');
 
         cy.wait('@RiderAttendence', { timeout: 30000 })
             .its('response.statusCode')

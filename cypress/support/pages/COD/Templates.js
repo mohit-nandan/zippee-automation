@@ -13,7 +13,11 @@ class Templates extends BasePage {
             url: CODRoutes.Templates
         }).as("Templates");
 
-        cy.contains("a", "COD").realHover();
+        cy.get(".sidebar").realHover("left").then(() => {
+            cy.contains("span", "COD")
+                .should("be.visible")
+                .realHover().click();
+        })
         cy.contains("Create New Template").click();
         cy.url().should('include', 'createNewPayroll');
 

@@ -14,8 +14,11 @@ class SettlementsPage extends BasePage {
             url: CODRoutes.RidersKPI
         }).as('RidersKPI');
 
-        cy.contains("a", "COD").realHover();
-
+        cy.get(".sidebar").realHover("left").then(() => {
+            cy.contains("span", "COD")
+                .should("be.visible")
+                .realHover().click();
+        })
         cy.contains("Settlements")
             .click({ force: true });
 

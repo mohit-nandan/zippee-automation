@@ -13,7 +13,11 @@ class DeactivatedRiders extends BasePage {
             url: CODRoutes.DeactivateRider
         }).as("DeactivatedRiders");
 
-        cy.contains("a", "COD").realHover();
+        cy.get(".sidebar").realHover("left").then(() => {
+            cy.contains("span", "COD")
+                .should("be.visible")
+                .realHover().click();
+        })
         cy.contains("Deactivated Riders").click();
         cy.url().should('include', 'deactivatedRider');
 

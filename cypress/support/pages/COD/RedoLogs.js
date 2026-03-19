@@ -13,7 +13,11 @@ class RedoLogs extends BasePage {
             url: CODRoutes.RedoLogs
         }).as("RedoLogs");
 
-        cy.contains("a", "COD").realHover();
+        cy.get(".sidebar").realHover("left").then(() => {
+            cy.contains("span", "COD")
+                .should("be.visible")
+                .realHover().click();
+        })
         cy.contains("Redo Logs").click();
         cy.url().should('include', 'redoLogs');
 

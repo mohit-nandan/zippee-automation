@@ -10,6 +10,7 @@ class BillingPage extends BasePage {
     clickBillingTab() {
         cy.intercept("POST", BillingRoutes.GetBillingDetails).as("transactionHome");
 
+        cy.realHover
         cy.contains("a", "Billing", { timeout: 15000 })
             .should("be.visible")
             .click();

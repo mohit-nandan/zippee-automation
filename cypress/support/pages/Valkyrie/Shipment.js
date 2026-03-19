@@ -87,7 +87,11 @@ class Shipment extends basePage {
             });
         };
 
-        cy.contains("a", "Valkyrie").realHover();
+        cy.get(".sidebar").realHover("left").then(() => {
+            cy.contains("span", "Pickup Delivery")
+                .should("be.visible")
+                .realHover().click();
+        })
         cy.contains("Deliveries").click();
         cy.url().should("include", "/pnd/shipments");
 
@@ -104,19 +108,21 @@ class Shipment extends basePage {
 
         const overrideShipmentStatus = (statusToSelect, reasonLabel) => {
             cy.get('button').find('img[alt="View Details"]').click();
-            cy.contains('Override Status').click();
-            cy.get('.css-1xc3v61-indicatorContainer').eq(1).click();
+            cy.contains('Override Status').click({ force: true });
+            cy.get('.css-x6oqpm-control').click();
             cy.contains(statusToSelect).click();
             cy.get('input[type="radio"]').first().click();
             cy.contains('label', reasonLabel).click();
-            cy.contains('button', 'Update').click();
+            cy.contains('button.bg-primary', 'Update').scrollIntoView().click({ force: true });
             cy.wait('@overrideStatus').then(({ response }) => {
                 expect(response.statusCode).to.eq(200);
             });
         };
 
         cy.get('@awb').then((awb) => {
-            cy.get('input[type="search"]').first().type(awb).type('{enter}');
+            cy.get('input[type="search"]:visible').first()
+                .type(awb)
+                .type('{enter}');
             cy.wait('@shipmentsView').then(({ response }) => {
                 expect(response.statusCode).to.eq(200);
             });
@@ -143,7 +149,7 @@ class Shipment extends basePage {
             'Ready'
         ];
 
-        cy.get('table tbody tr td').eq(1).find('a').click();
+        cy.get('.text-blue').click();
         cy.wait('@shipmentdetails').then(({ response }) => {
             expect(response.statusCode).to.eq(200);
         });

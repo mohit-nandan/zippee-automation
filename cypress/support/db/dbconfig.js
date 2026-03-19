@@ -14,6 +14,8 @@ function getDbConfig(envName) {
         },
         waitForConnections: true,
         connectionLimit: 10,
+        enableKeepAlive: true,
+        keepAliveInitialDelay: 10000,
     };
 }
 

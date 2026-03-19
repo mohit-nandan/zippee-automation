@@ -55,33 +55,38 @@ module.exports = defineConfig({
     setupNodeEvents(on, config) {
       require('cypress-mochawesome-reporter/plugin')(on);
 
-      const envName = (config.env.environment || "staging").toUpperCase();
-      
       const envContent = fs.existsSync(envPath) ? fs.readFileSync(envPath, 'utf8') : '';
+      const allKeys = envContent.split('\n').map(l => l.split('=')[0].trim()).filter(k => k && !k.startsWith('#'));
+      console.log(`[Cypress Config] Keys found in .env: ${allKeys.length}`);
 
-      const getRawEnvValue = (key) => {
+      let rawEnv = config.env.environment || "staging";
+      let envName = String(rawEnv).split(/[\s,]+/)[0].trim().toUpperCase();
+      console.log(`[Cypress Config] Detected Environment: [${envName}] (from "${rawEnv}")`);
+
+      const getFileEnvValue = (key) => {
         const regex = new RegExp(`^${key}=(.*)$`, 'm');
         const match = envContent.match(regex);
-        if (match) {
-          return match[1].trim().replace(/^["']|["']$/g, '');
-        }
-        return process.env[key];
+        return match ? match[1].trim().replace(/^["']|["']$/g, '') : null;
       };
 
-      const baseUrl = getRawEnvValue(`${envName}_BASE_URL`);
+      config.env.environment = envName.toLowerCase();
+
+      const baseUrl = getFileEnvValue(`${envName}_BASE_URL`);
       if (baseUrl) {
         config.baseUrl = baseUrl;
+        console.log(`[Cypress Config] Base URL set to: ${baseUrl}`);
       }
 
-      config.env.adminUser = getRawEnvValue(`${envName}_ADMIN_USER`);
-      config.env.adminPass = getRawEnvValue(`${envName}_ADMIN_PASS`);
-      
+      config.env.adminUser = getFileEnvValue(`${envName}_ADMIN_USER`);
+      config.env.adminPass = getFileEnvValue(`${envName}_ADMIN_PASS`);
+      config.env.xApiKey = getFileEnvValue(`${envName}_X_API_KEY`);
+
       const dbConfig = getDbConfig(envName);
 
       config.env.shipmentApi = {
-        username: getRawEnvValue(`${envName}_CLICKPOST_SHIPMENT_API_USERNAME`),
-        password: getRawEnvValue(`${envName}_CLICKPOST_SHIPMENT_API_PASSWORD`),
-        apiKey: getRawEnvValue(`${envName}_CLICKPOST_API_KEY`)
+        username: getFileEnvValue(`${envName}_CLICKPOST_SHIPMENT_API_USERNAME`),
+        password: getFileEnvValue(`${envName}_CLICKPOST_SHIPMENT_API_PASSWORD`),
+        apiKey: getFileEnvValue(`${envName}_CLICKPOST_API_KEY`)
       };
 
       on('task', {
@@ -113,7 +118,7 @@ module.exports = defineConfig({
           return queryDb(dbConfig, query);
         },
       });
-      
+
       config.env.grepFilterSpecs = true;
       config.env.grepOmitFiltered = true;
 

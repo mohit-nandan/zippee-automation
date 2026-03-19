@@ -13,7 +13,11 @@ class Payouts extends BasePage {
             url: CODRoutes.Payouts
         }).as("RiderPayouts");
 
-        cy.contains("a", "COD").realHover();
+        cy.get(".sidebar").realHover("left").then(() => {
+            cy.contains("span", "COD")
+                .should("be.visible")
+                .realHover().click();
+        })
         cy.contains("Payouts").click();
         cy.url().should('include', 'payoutConsole');
 

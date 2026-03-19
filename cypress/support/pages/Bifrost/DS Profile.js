@@ -10,9 +10,11 @@ class DsProfilePage extends BasePage {
     clickDsProfileTab() {
         cy.intercept("GET", BifrostRoutes.DSProfile).as("dsProfile");
 
-        cy.contains("a", "Bifrost")
-            .should("be.visible")
-            .realHover();
+        cy.get(".sidebar").realHover("left").then(() => {
+            cy.contains("span", "Middleware")
+                .should("be.visible")
+                .realHover().click();
+        })
 
         cy.contains("DS Profile")
             .should("be.visible")

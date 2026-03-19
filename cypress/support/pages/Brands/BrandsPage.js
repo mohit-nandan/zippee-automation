@@ -10,9 +10,11 @@ class BrandsPage extends BasePage {
     }
 
     clickBrandsTab() {
-        cy.contains("a", "Brands", { timeout: 10000 })
-            .should("be.visible")
-            .click();
+        cy.get(".sidebar").realHover("left").then(() => {
+            cy.contains("a", "Brands", { timeout: 10000 })
+                .should("be.visible")
+                .click();
+        })
     }
 
     searchandVerifyBrand() {

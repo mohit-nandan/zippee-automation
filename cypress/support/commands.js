@@ -1,10 +1,19 @@
 const AuthRoutes = require("./api/authRoutes");
 
 Cypress.Commands.add("loginSession", () => {
+    const env = (Cypress.env("environment") || "staging").toUpperCase();
+    const routes = AuthRoutes[env] || AuthRoutes.STAGING;
+
     cy.session("adminSession", () => {
+        const headers = {};
+        if (Cypress.env("xApiKey")) {
+            headers["x-api-key"] = Cypress.env("xApiKey");
+        }
+
         cy.request({
             method: "POST",
-            url: AuthRoutes.login,
+            url: routes.login,
+            headers: Object.keys(headers).length > 0 ? headers : undefined,
             body: {
                 email: Cypress.env("adminUser"),
                 password: Cypress.env("adminPass")
@@ -15,6 +24,11 @@ Cypress.Commands.add("loginSession", () => {
 
             if (domain === "localhost" || domain === "127.0.0.1") {
                 domain = null;
+            } else {
+                const parts = domain.split(".");
+                if (parts.length >= 2) {
+                    domain = "." + parts.slice(-2).join(".");
+                }
             }
 
             cy.setCookie("access_token", response.body.data.access, {
@@ -30,7 +44,18 @@ Cypress.Commands.add("loginSession", () => {
 
 Cypress.Commands.add("setupAndNavigate", () => {
     cy.loginSession();
-    cy.visit("/");
+    cy.visit("/", { failOnStatusCode: false });
+    
+    // Log cookies for debugging if we still land on sign-in
+    cy.getCookies().then((cookies) => {
+        const tokens = cookies.filter(c => c.name.includes('token'));
+        if (tokens.length === 0) {
+            cy.log('WARNING: No tokens found in cookies!');
+        } else {
+            cy.log(`Tokens found: ${tokens.map(t => t.name).join(', ')}`);
+        }
+    });
+
     cy.get('aside', { timeout: 30000 }).should('be.visible');
     cy.intercept('https://desk.zoho.in/**', { statusCode: 200, body: {} });
 });

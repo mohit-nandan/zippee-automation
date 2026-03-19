@@ -1,6 +1,6 @@
 const RulesPage = require("../../support/pages/Bifrost/Rules");
 const StoresPage = require("../../support/pages/Bifrost/Stores");
-const DsProfilePage = require("../../support/pages/Bifrost/Ds Profile");
+const DsProfilePage = require("../../support/pages/Bifrost/DS Profile");
 const ShipmentsPage = require("../../support/pages/Bifrost/Shipments");
 const OrderPage = require("../../support/pages/Bifrost/Order");
 describe("Bifrost", { tags: '@smoke' }, () => {

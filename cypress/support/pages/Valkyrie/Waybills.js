@@ -12,7 +12,11 @@ class Waybills extends basePage {
             url: ValkyrieRoutes.waybillsView
         }).as('waybillsView');
 
-        cy.contains("a", "Valkyrie").realHover();
+        cy.get(".sidebar").realHover("left").then(() => {
+            cy.contains("span", "Pickup Delivery")
+                .should("be.visible")
+                .realHover().click();
+        })
         cy.contains("Print Waybills").click();
         cy.url().should("include", "/print-waybills");
         cy.wait('@waybillsView').then(({ response }) => {

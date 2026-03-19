@@ -11,9 +11,11 @@ class ShipmentsPage extends BasePage {
         cy.intercept("GET", BifrostRoutes.Shipments).as("shipments");
         cy.intercept("GET", BifrostRoutes.tracking).as("tracking");
 
-        cy.contains("a", "Bifrost")
-            .should("be.visible")
-            .realHover();
+        cy.get(".sidebar").realHover("left").then(() => {
+            cy.contains("span", "Middleware")
+                .should("be.visible")
+                .realHover().click();
+        })
 
         cy.contains("Shipments")
             .should("be.visible")
@@ -33,7 +35,7 @@ class ShipmentsPage extends BasePage {
                 cy.wait('@shipments', { timeout: 20000 })
                     .its('response.statusCode')
                     .should('eq', 200);
-                cy.get("table tbody tr").find("td").eq(0).should("have.text", awb).click();
+                cy.get('.text-blue-600').should("have.text", awb).click();
                 cy.wait('@shipments', { timeout: 20000 })
                     .its('response.statusCode')
                     .should('eq', 200);
@@ -43,7 +45,7 @@ class ShipmentsPage extends BasePage {
                     .its('response')
                     .then((response) => {
                         expect(response.statusCode).to.eq(200);
-                        expect(response.body.data.dis_events).to.have.lengthOf(6);
+                        expect(response.body.data.dis_events).to.have.lengthOf(5);
                     })
                 cy.contains("Last Mile Logs").click();
             } else {

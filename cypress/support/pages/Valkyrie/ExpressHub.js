@@ -12,10 +12,14 @@ class ExpressHub extends basePage {
             url: ValkyrieRoutes.ExpressHubShipments
         }).as('ExpressHubShipments');
 
-        cy.contains("a", "Valkyrie").realHover();
+        cy.get(".sidebar").realHover("left").then(() => {
+            cy.contains("span", "Pickup Delivery")
+                .should("be.visible")
+                .realHover().click();
+        })
         cy.contains("Express Hub").click();
         cy.url().should("include", "/express-hub");
-        
+
         const env = Cypress.env('environment') || 'staging';
         cy.fixture(`${env}/testData`).then((data) => {
             const searchLocation = data.expressHub.searchLocation;

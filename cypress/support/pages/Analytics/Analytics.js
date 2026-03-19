@@ -8,9 +8,11 @@ class AnalyticsPage extends Basepage {
     }
 
     clickAnalyticsTab() {
-        cy.contains("a", "Analytics", { timeout: 10000 })
-            .should("be.visible")
-            .click();
+        cy.get(".sidebar").realHover("left").then(() => {
+            cy.contains("a", "Analytics", { timeout: 10000 })
+                .should("be.visible")
+                .click();
+        })
     }
 
     clickOperationTab() {

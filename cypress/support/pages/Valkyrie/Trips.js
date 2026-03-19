@@ -11,7 +11,11 @@ class Trips extends basePage {
             url: ValkyrieRoutes.tripsView
         }).as('tripsView');
 
-        cy.contains("a", "Valkyrie").realHover();
+        cy.get(".sidebar").realHover("left").then(() => {
+            cy.contains("span", "Pickup Delivery")
+                .should("be.visible")
+                .realHover().click();
+        })
         cy.contains("Deliveries").click();
         cy.location('pathname').should('include', 'shipments');
         cy.contains(/^Trips$/).click();
